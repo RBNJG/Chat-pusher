@@ -1,6 +1,6 @@
 // resources/js/components/ChatMessages.vue
 <template>
-  <ul class="chat">
+  <ul class="chat" ref="chatContainer">
     <li class="left clearfix" v-for="message in messages" :key="message.id">
       <div class="clearfix">
         <div class="header">
@@ -18,5 +18,19 @@
 <script>
 export default {
   props: ["messages"],
+  updated() {
+    this.$nextTick(() => {
+      const container = this.$refs.chatContainer;
+      container.scrollTop = container.scrollHeight;
+    });
+  },
 };
 </script>
+<style scoped>
+
+.chat{
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+</style>

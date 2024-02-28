@@ -1,10 +1,15 @@
 <!-- resources/views/chat.blade.php -->
 @extends('layouts.app')
 @section('content')
-<div class="container">
-    <div class="card">
+<div class="container d-flex flex-row">
+    <div class="col-9">
+        <div>
+            <canvas-component></canvas-component>
+        </div>
+    </div>
+    <div class="col-3 card">
         <div class="card-header">Chats</div>
-        <div class="card-body">
+        <div class="card-body chat">
             <chat-messages :messages="messages"></chat-messages>
         </div>
         <div class="card-footer">
@@ -13,3 +18,11 @@
     </div>
 </div>
 @endsection
+
+<style scoped>
+
+.chat{
+    max-height: 520px;
+}
+
+</style>

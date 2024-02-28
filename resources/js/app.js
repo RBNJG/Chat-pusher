@@ -47,6 +47,7 @@ import { createApp } from 'vue';
 import ExampleComponent from './components/ExampleComponent.vue';
 import ChatMessages from './components/ChatMessages.vue';
 import ChatForm from './components/ChatForm.vue';
+import Canvas from './components/Canvas.vue';
 
 
 const app = createApp({
@@ -85,6 +86,7 @@ const app = createApp({
 app.component('example-component', ExampleComponent);
 app.component('chat-messages', ChatMessages);
 app.component('chat-form', ChatForm);
+app.component('canvas-component', Canvas);
 
 // Monta la aplicación Vue
 app.mount('#app');
