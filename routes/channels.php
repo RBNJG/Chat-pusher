@@ -22,3 +22,7 @@ Broadcast::channel('chat', function ($user) {
     return Auth::check();
 });
 
+Broadcast::channel('canvas', function ($user) {
+    return Auth::check();
+});
+
