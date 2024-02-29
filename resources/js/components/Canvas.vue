@@ -1,5 +1,12 @@
 <script>
 export default {
+    props: ["newCanvas"],
+    updated(){
+        this.$nextTick(() =>{
+            const container = this.$refs.canvasContainer;
+            container = newCanvas.drawImage();
+        })
+    },
     data() {
         return {
             canvas: null,
@@ -20,8 +27,21 @@ export default {
         this.init();
     },
     methods: {
+        sendCanvas() {
+            this.$emit("canvasupdate", {
+                user: this.user,
+
+                canvas: this.canvas.toDataURL(), //Pasamos el canvas en Base64 para generar después la imagen
+            });
+
+            console.log("canvas sent");
+        },
         init() {
             this.canvas = document.getElementById('can');
+            if (this.newCanvas != null) {
+                this.canvas = this.newCanvas.drawImage();
+                console.log("update");
+            }
             this.ctx = this.canvas.getContext("2d");
             this.w = this.canvas.width;
             this.h = this.canvas.height;
@@ -29,7 +49,10 @@ export default {
             this.canvas.addEventListener("mousemove", (e) => this.findxy('move', e));
             this.canvas.addEventListener("mousedown", (e) => this.findxy('down', e));
             this.canvas.addEventListener("mouseup", (e) => this.findxy('up', e));
-            this.canvas.addEventListener("mouseout", (e) => this.findxy('out', e));
+            this.canvas.addEventListener("mouseout", (e) => {
+                this.findxy('out', e);
+                this.sendCanvas();
+            });
         },
         color(obj) {
             switch (obj.id) {
@@ -62,7 +85,7 @@ export default {
             this.ctx.beginPath();
             this.ctx.moveTo(this.prevX, this.prevY);
             this.ctx.lineTo(this.currX, this.currY);
-            this.ctx.arc(this.currX, this.currY, this.y/20, 0, Math.PI * 2, true); 
+            this.ctx.arc(this.currX, this.currY, this.y / 20, 0, Math.PI * 2, true);
             this.ctx.strokeStyle = this.x;
             this.ctx.lineWidth = this.y;
             // this.ctx.fill();
@@ -95,7 +118,7 @@ export default {
                     this.ctx.beginPath();
                     this.ctx.fillStyle = this.x;
                     //this.ctx.fillRect(this.currX, this.currY, this.y, this.y); 
-                    this.ctx.arc(this.currX, this.currY, this.y/2, 0, Math.PI * 2, true); 
+                    this.ctx.arc(this.currX, this.currY, this.y / 2, 0, Math.PI * 2, true);
                     this.ctx.fill();
                     this.ctx.closePath();
                     this.dot_flag = false;
@@ -125,7 +148,7 @@ export default {
     <body>
         <div class="input-group">
 
-            <canvas id="can" width="700" height="590" style="position:absolute;top:10%;left:10%;border:2px solid;"></canvas>
+            <canvas ref="canvasContainer" @keyup.enter="sendCanvas" id="can" width="700" height="590" style="position:absolute;top:10%;left:10%;border:2px solid;"></canvas>
             <div style="position:absolute;top:12%;left:43%;">Choose Color</div>
             <div style="position:absolute;top:15%;left:45%;width:10px;height:10px;background:green;" id="green"
                 @click="color(this)"></div>
@@ -151,8 +174,4 @@ export default {
         </div>
     </body>
 </template>
-<style scoped>
-
-
-
-</style>
+<style scoped></style>

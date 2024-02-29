@@ -2,6 +2,8 @@
 
 namespace App\Events;
 
+use App\Models\User;
+
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -10,16 +12,20 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class CanvasUpdate
+class CanvasUpdate implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    public $user;
+    public $canvas;
 
     /**
      * Create a new event instance.
      */
-    public function __construct()
+    public function __construct(User $user, $canvas)
     {
-        //
+        $this->user = $user;
+        $this->canvas = $canvas;
     }
 
     /**
@@ -29,8 +35,6 @@ class CanvasUpdate
      */
     public function broadcastOn()
     {
-        return [
-            new PrivateChannel('canvas'),
-        ];
+        return new PrivateChannel('canvas');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CanvasUpdate;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Message;
@@ -32,10 +33,24 @@ class ChatsController extends Controller
         $message = $user->messages()->create([
             'message' => $request->input('message')
         ]);
-        
+
         broadcast(new MessageSent($user, $message))->toOthers();
 
         return ['status' => 'Message Sent!'];
     }
-}
 
+    public function fetchCanvas()
+    {
+        return "";
+    }
+
+    public function sendCanvas(Request $request)
+    {
+        $user = Auth::user();
+        $canvas = $request->input('canvas');
+
+        broadcast(new CanvasUpdate($user, $canvas))->toOthers();
+
+        return ['status' => 'Canvas Sent!'];
+    }
+}

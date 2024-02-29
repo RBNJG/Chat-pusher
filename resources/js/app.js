@@ -53,7 +53,8 @@ import Canvas from './components/Canvas.vue';
 const app = createApp({
     data() {
         return {
-            messages: []
+            messages: [],
+            newCanvas: ""
         };
     },
     created() {
@@ -65,6 +66,13 @@ const app = createApp({
                     user: e.user
                 });
             });
+
+        // routes/channels
+        // Escuchamos el canal canvas para reconstruir el canvas cuando el que está dibujando hace mouseout    
+        window.Echo.private('canvas')
+            .listen('CanvasUpdate', (e) =>{
+                this.newCanvas = e.canvas
+            })
 
     },
     methods: {
@@ -78,6 +86,9 @@ const app = createApp({
             axios.post('/messages', message).then(response => {
                 console.log(response.data);
             });
+        },
+        sendCanvas(){
+            
         }
     }
 });
