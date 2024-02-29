@@ -10,8 +10,8 @@ export default {
             prevY: 0,
             currY: 0,
             dot_flag: false,
-            x: "black",
-            y: 2,
+            x: "black", //color
+            y: 10,      //ancho 
             w: 0,
             h: 0,
         };
@@ -55,15 +55,17 @@ export default {
                     this.x = "white";
                     break;
             }
-            if (this.x == "white") this.y = 14;
+            if (this.x == "white") this.y = 14; //Borrador
             else this.y = 2;
         },
         draw() {
             this.ctx.beginPath();
             this.ctx.moveTo(this.prevX, this.prevY);
             this.ctx.lineTo(this.currX, this.currY);
+            this.ctx.arc(this.currX, this.currY, this.y/20, 0, Math.PI * 2, true); 
             this.ctx.strokeStyle = this.x;
             this.ctx.lineWidth = this.y;
+            // this.ctx.fill();
             this.ctx.stroke();
             this.ctx.closePath();
         },
@@ -92,7 +94,9 @@ export default {
                 if (this.dot_flag) {
                     this.ctx.beginPath();
                     this.ctx.fillStyle = this.x;
-                    this.ctx.fillRect(this.currX, this.currY, 2, 2);
+                    //this.ctx.fillRect(this.currX, this.currY, this.y, this.y); 
+                    this.ctx.arc(this.currX, this.currY, this.y/2, 0, Math.PI * 2, true); 
+                    this.ctx.fill();
                     this.ctx.closePath();
                     this.dot_flag = false;
                 }

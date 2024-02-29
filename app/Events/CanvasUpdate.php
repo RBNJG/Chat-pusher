@@ -30,7 +30,7 @@ class CanvasUpdate
     public function broadcastOn()
     {
         return [
-            new PrivateChannel('canavs'),
+            new PrivateChannel('canvas'),
         ];
     }
 }
