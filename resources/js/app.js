@@ -65,6 +65,7 @@ const app = createApp({
                     message: e.message.message,
                     user: e.user
                 });
+                console.log("Hola")
             });
 
         // routes/channels
@@ -72,6 +73,7 @@ const app = createApp({
         window.Echo.private('canvas')
             .listen('CanvasUpdate', (e) =>{
                 this.newCanvas = e.canvas
+                console.log("Ha entrado en el canal canvas update")
             })
 
     },
@@ -87,8 +89,10 @@ const app = createApp({
                 console.log(response.data);
             });
         },
-        sendCanvas(){
-            
+        sendCanvas(canvas){
+            axios.post('/canvas', canvas).then(response => {
+                console.log(response.data);
+            });
         }
     }
 });
