@@ -1,8 +1,8 @@
 <script>
 export default {
     props: ["newCanvas"],
-    updated(){
-        this.$nextTick(() =>{
+    updated() {
+        this.$nextTick(() => {
             const container = this.$refs.canvasContainer;
             container = newCanvas.drawImage();
         })
@@ -27,14 +27,28 @@ export default {
         this.init();
     },
     methods: {
-        sendCanvas() {
+        sendCanvas(params) {
             this.$emit("canvasupdate", {
                 user: this.user,
 
-                canvas: this.canvas.toDataURL(), //Pasamos el canvas en Base64 para generar después la imagen
+                canvas: params, //Pasamos el canvas en Base64 para generar después la imagen
             });
 
             console.log("canvas sent");
+        },
+        getParams() {
+            console.log("Dentro de getParams");
+
+            let params = {
+                pX: this.prevX,
+                cX: this.currX,
+                pY: this.prevY,
+                cY: this.currY,
+                x: this.x,
+                y: this.y
+            }
+
+            this.sendCanvas(params)
         },
         init() {
             this.canvas = document.getElementById('can');
@@ -49,10 +63,7 @@ export default {
             this.canvas.addEventListener("mousemove", (e) => this.findxy('move', e));
             this.canvas.addEventListener("mousedown", (e) => this.findxy('down', e));
             this.canvas.addEventListener("mouseup", (e) => this.findxy('up', e));
-            this.canvas.addEventListener("mouseout", (e) => {
-                this.findxy('out', e);
-                this.sendCanvas();
-            });
+            this.canvas.addEventListener("mouseout", (e) => this.findxy('out', e));
         },
         color(obj) {
             switch (obj.id) {
@@ -123,6 +134,10 @@ export default {
                     this.ctx.closePath();
                     this.dot_flag = false;
                 }
+
+                console.log("Entrando a getParams");
+
+                this.getParams();
             }
             if (res == 'up' || res == "out") {
                 this.flag = false;
@@ -134,6 +149,10 @@ export default {
                     this.currX = e.clientX - this.canvas.offsetLeft;
                     this.currY = e.clientY - this.canvas.offsetTop;
                     this.draw();
+
+                    console.log("Entrando a getParams en move");
+
+                    this.getParams();
                 }
             }
         }
@@ -148,7 +167,8 @@ export default {
     <body>
         <div class="input-group">
 
-            <canvas ref="canvasContainer" @keyup.enter="sendCanvas" id="can" width="700" height="590" style="position:absolute;top:10%;left:10%;border:2px solid;"></canvas>
+            <canvas ref="canvasContainer" @keyup.enter="sendCanvas" id="can" width="700" height="590"
+                style="position:absolute;top:10%;left:10%;border:2px solid;"></canvas>
             <div style="position:absolute;top:12%;left:43%;">Choose Color</div>
             <div style="position:absolute;top:15%;left:45%;width:10px;height:10px;background:green;" id="green"
                 @click="color(this)"></div>

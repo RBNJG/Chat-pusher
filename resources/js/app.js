@@ -54,7 +54,7 @@ const app = createApp({
     data() {
         return {
             messages: [],
-            newCanvas: ""
+            newCanvas: {}
         };
     },
     created() {
@@ -73,7 +73,7 @@ const app = createApp({
         window.Echo.private('canvas')
             .listen('CanvasUpdate', (e) =>{
                 this.newCanvas = e.canvas
-                console.log("Ha entrado en el canal canvas update")
+                console.log(this.newCanvas)
             })
 
     },
