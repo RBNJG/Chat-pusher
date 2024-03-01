@@ -1,10 +1,35 @@
 <script>
 export default {
     props: ["newCanvas"],
+    // watch: {
+    //     newCanvas: {
+    //         handler(newValue) {
+    //             this.prevX = newValue.pX;
+    //             this.currX = newValue.cX;
+    //             this.prevY = newValue.pY;
+    //             this.currY = newValue.cY;
+    //             this.x = newValue.x;
+    //             this.y = newValue.y;
+
+    //             console.log("A dibujar!!");
+
+    //             this.draw();
+    //         },
+    //         deep: true
+    //     }
+    // },
     updated() {
         this.$nextTick(() => {
-            const container = this.$refs.canvasContainer;
-            container = newCanvas.drawImage();
+            this.prevX = this.newCanvas.pX;
+            this.currX = this.newCanvas.cX;
+            this.prevY = this.newCanvas.pY;
+            this.currY = this.newCanvas.cY;
+            this.x = this.newCanvas.x;
+            this.y = this.newCanvas.y;
+
+            console.log("A dibujar!!");
+
+            this.draw();
         })
     },
     data() {
@@ -52,10 +77,6 @@ export default {
         },
         init() {
             this.canvas = document.getElementById('can');
-            if (this.newCanvas != null) {
-                this.canvas = this.newCanvas.drawImage();
-                console.log("update");
-            }
             this.ctx = this.canvas.getContext("2d");
             this.w = this.canvas.width;
             this.h = this.canvas.height;
@@ -109,6 +130,7 @@ export default {
                 this.ctx.clearRect(0, 0, this.w, this.h);
                 document.getElementById("canvasimg").style.display = "none";
             }
+            console.log(this.newCanvas);
         },
         save() {
             document.getElementById("canvasimg").style.border = "2px solid";
@@ -167,7 +189,7 @@ export default {
     <body>
         <div class="input-group">
 
-            <canvas ref="canvasContainer" @keyup.enter="sendCanvas" id="can" width="700" height="590"
+            <canvas @keyup.enter="sendCanvas" id="can" width="700" height="590"
                 style="position:absolute;top:10%;left:10%;border:2px solid;"></canvas>
             <div style="position:absolute;top:12%;left:43%;">Choose Color</div>
             <div style="position:absolute;top:15%;left:45%;width:10px;height:10px;background:green;" id="green"

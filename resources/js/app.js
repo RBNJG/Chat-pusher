@@ -65,16 +65,15 @@ const app = createApp({
                     message: e.message.message,
                     user: e.user
                 });
-                console.log("Hola")
             });
 
         // routes/channels
         // Escuchamos el canal canvas para reconstruir el canvas cuando el que está dibujando hace mouseout    
         window.Echo.private('canvas')
             .listen('CanvasUpdate', (e) =>{
-                this.newCanvas = e.canvas
-                console.log(this.newCanvas)
-            })
+                this.newCanvas = e.canvas;
+                console.log(this.newCanvas);
+            });
 
     },
     methods: {

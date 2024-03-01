@@ -4,7 +4,7 @@
 <div class="container d-flex flex-row">
     <div class="col-9">
         <div>
-            <canvas-component v-on:canvasupdate="sendCanvas"></canvas-component>
+            <canvas-component :new-canvas="newCanvas" v-on:canvasupdate="sendCanvas"></canvas-component>
         </div>
     </div>
     <div class="col-3 card">
