@@ -1,23 +1,6 @@
 <script>
 export default {
     props: ["newCanvas"],
-    // watch: {
-    //     newCanvas: {
-    //         handler(newValue) {
-    //             this.prevX = newValue.pX;
-    //             this.currX = newValue.cX;
-    //             this.prevY = newValue.pY;
-    //             this.currY = newValue.cY;
-    //             this.x = newValue.x;
-    //             this.y = newValue.y;
-
-    //             console.log("A dibujar!!");
-
-    //             this.draw();
-    //         },
-    //         deep: true
-    //     }
-    // },
     updated() {
         this.$nextTick(() => {
             this.prevX = this.newCanvas.pX;
@@ -26,14 +9,25 @@ export default {
             this.currY = this.newCanvas.cY;
             this.x = this.newCanvas.x;
             this.y = this.newCanvas.y;
+            this.dibuja = this.newCanvas.d;
 
             console.log("A dibujar!!");
 
-            this.draw();
+            if(this.dibuja){
+                this.prevX = this.currX;
+                this.prevY = this.currY;
+                this.currX = this.canvas.clientX - this.canvas.offsetLeft;
+                this.currY = this.canvas.clientY - this.canvas.offsetTop;
+
+                this.draw();
+            }else{
+                this.draw();
+            }
         })
     },
     data() {
         return {
+            dibuja: false,
             canvas: null,
             ctx: null,
             flag: false,
@@ -70,7 +64,8 @@ export default {
                 pY: this.prevY,
                 cY: this.currY,
                 x: this.x,
-                y: this.y
+                y: this.y,
+                d: this.dibuja
             }
 
             this.sendCanvas(params)
@@ -155,6 +150,7 @@ export default {
                     this.ctx.fill();
                     this.ctx.closePath();
                     this.dot_flag = false;
+                    this.dibuja = true;
                 }
 
                 console.log("Entrando a getParams");
@@ -166,6 +162,7 @@ export default {
             }
             if (res == 'move') {
                 if (this.flag) {
+                    this.dibuja = false;
                     this.prevX = this.currX;
                     this.prevY = this.currY;
                     this.currX = e.clientX - this.canvas.offsetLeft;
