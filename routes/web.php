@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,3 +26,4 @@ Route::get('/messages', [App\Http\Controllers\ChatsController::class, 'fetchMess
 Route::post('/messages', [App\Http\Controllers\ChatsController::class, 'sendMessage']);
 Route::get('/canvas', [App\Http\Controllers\ChatsController::class, 'fetchCanvas']);
 Route::post('/canvas', [App\Http\Controllers\ChatsController::class, 'sendCanvas']);
+Route::get('test',[TestController::class,'test']);
