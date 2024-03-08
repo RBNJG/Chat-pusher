@@ -3,26 +3,22 @@ export default {
     props: ["newCanvas"],
     updated() {
         this.$nextTick(() => {
-            // this.prevX = this.newCanvas.pX;
-            // this.currX = this.newCanvas.cX;
-            // this.prevY = this.newCanvas.pY;
-            // this.currY = this.newCanvas.cY;
-            // this.x = this.newCanvas.x;
-            // this.y = this.newCanvas.y;
-            // this.dibuja = this.newCanvas.d;
+            if (this.newCanvas) {
 
-            // console.log("A dibujar!!");
+                if(this.newCanvas== "clear"){
+                    this.clearArea();
+                }else{
+                    let positions = JSON.parse(this.newCanvas);
 
-            // if (this.dibuja) {
-            //     this.prevX = this.currX;
-            //     this.prevY = this.currY;
-            //     this.currX = this.canvas.clientX - this.canvas.offsetLeft;
-            //     this.currY = this.canvas.clientY - this.canvas.offsetTop;
-
-            //     this.draw();
-            // } else {
-            //     this.draw();
-            // }
+                    // Dibujamos punto por punto los movimientos
+                positions.forEach((movement, index) => {
+                    setTimeout(() => {
+                        this.drawLine(this.ctx, movement.x, movement.y, movement.offsetX, movement.offsetY);
+                    },index * 5); //El valor es el tiempo de espera en milisegundos
+                });
+                }
+                
+            }
         })
     },
     data() {
@@ -31,18 +27,11 @@ export default {
             canvas: null,
             ctx: null,
             flag: false,
-            // prevX: 0,
-            // currX: 0,
-            // prevY: 0,
-            // currY: 0,
             x: 0,
             y: 0,
             offsetX: null,
             offsetY: null,
-            // x: "black", //color
-            // y: 10,      //ancho 
-            // w: 0,
-            // h: 0,
+            movements: []
         };
     },
     mounted() {
@@ -58,21 +47,13 @@ export default {
 
             console.log("canvas sent");
         },
-        // getParams() {
-        //     console.log("Dentro de getParams");
+        getParams() {
+            console.log("Dentro de getParams");
 
-        //     let params = {
-        //         pX: this.prevX,
-        //         cX: this.currX,
-        //         pY: this.prevY,
-        //         cY: this.currY,
-        //         x: this.x,
-        //         y: this.y,
-        //         d: this.dibuja
-        //     }
+            const params = JSON.stringify(this.movements);
 
-        //     this.sendCanvas(params)
-        // },
+            this.sendCanvas(params)
+        },
         init() {
             this.canvas = document.getElementById('can');
             this.ctx = this.canvas.getContext("2d");
@@ -85,20 +66,36 @@ export default {
 
             this.canvas.addEventListener('mousemove', (e) => {
                 if (this.isDrawing) {
+                    this.movements.push({ x: this.x, y: this.y, offsetX: e.offsetX, offsetY: e.offsetY });
                     this.drawLine(this.ctx, this.x, this.y, e.offsetX, e.offsetY);
                     this.x = e.offsetX;
                     this.y = e.offsetY;
+
+                    if (this.movements.length >= 1000) {
+                        this.getParams();
+                        this.movements = [];
+                    }
                 }
             });
 
             this.canvas.addEventListener('mouseup', (e) => {
                 if (this.isDrawing) {
+                    this.movements.push({ x: this.x, y: this.y, offsetx: e.offsetX, offsetY: e.offsetY });
                     this.drawLine(this.ctx, this.x, this.y, e.offsetX, e.offsetY);
+                    this.getParams();
                     this.x = 0;
                     this.y = 0;
                     this.isDrawing = false;
+                    this.movements = [];
                 }
             });
+
+            let clear = document.getElementById('clearArea');
+
+            clear.addEventListener('click', (e) =>{
+                this.clearArea();
+                this.sendCanvas("clear");
+            })
         },
         drawLine(ctx, x1, y1, x2, y2) {
             ctx.beginPath();
@@ -126,7 +123,7 @@ export default {
 
             <canvas @keyup.enter="sendCanvas" id="can" width="700" height="590"
                 style="position:absolute;top:10%;left:10%;border:2px solid;"></canvas>
-            <button onclick="javascript:clearArea();return false;">Clear Area</button>
+            <button id="clearArea">Clear Area</button>
             Line width : <select id="selWidth">
                 <option value="11">11</option>
                 <option value="13" selected="selected">13</option>
